@@ -14,11 +14,10 @@ function rot13LetterConvertor(l, minCode, maxCode) {
 }
 
 function rot13(message) {
-    let resultMessage = ''
 
     let splitMessage = message.split('')
 
-    resultMessage = splitMessage.map(el => {
+    const resultMessage = splitMessage.map(el => {
 
         if (charCodeAtFn(el) >= 65 && charCodeAtFn(el)<= 90) {
             return String.fromCharCode(rot13LetterConvertor(el, 65, 90))
