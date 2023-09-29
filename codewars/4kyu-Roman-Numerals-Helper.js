@@ -40,98 +40,83 @@
 //✅SOLUTION:
 
 class RomanNumerals {
-    toRoman(num,) {
+    static allRomans = [
+        {symbol: 'M', value: 1000},
+        {symbol: 'CM', value: 900},
+        {symbol: 'D', value: 500},
+        {symbol: 'CD', value: 400},
+        {symbol: 'C', value: 100},
+        {symbol: 'XC', value: 90},
+        {symbol: 'L', value: 50},
+        {symbol: 'XL', value: 40},
+        {symbol: 'X', value: 10},
+        {symbol: 'IX', value: 9},
+        {symbol: 'V', value: 5},
+        {symbol: 'IV', value: 4},
+        {symbol: 'I', value: 1}
+    ]
+    static _notValidDataType(data, expectedType, recommendedMethod) {
+        return console.error(`Inappropriate data type ('${data}' --> ${typeof data}), expected (${expectedType}). Use ${recommendedMethod} method`)
+    }
+    static toRoman(num) {
 
-        const allRoman = [
-            { symbol: 'M', value: 1000 },
-            { symbol: 'CM', value: 900 },
-            { symbol: 'D', value: 500 },
-            { symbol: 'CD', value: 400 },
-            { symbol: 'C', value: 100 },
-            { symbol: 'XC', value: 90 },
-            { symbol: 'L', value: 50 },
-            { symbol: 'XL', value: 40 },
-            { symbol: 'X', value: 10 },
-            { symbol: 'IX', value: 9 },
-            { symbol: 'V', value: 5 },
-            { symbol: 'IV', value: 4 },
-            { symbol: 'I', value: 1 }
-        ]
+        const invalidNumberMessage = 'Invalid number, expected 1 - 3999'
 
-        if (typeof num !== 'number') {
-            console.error('Inappropriate data type (string), expected (number). Use fromRoman() method')
-        } else {
-            if (num < 1 && num >= 4000) console.error('Inappropriate number, expected 1 - 3999')
-            else {
+        if (typeof num !== 'number') return this._notValidDataType(num, 'number', 'fromRoman()')
 
-                let romanResultNumber = ''
-
-                for (let el of allRoman) {
-                    while (num >= el.value) {
-                        romanResultNumber += el.symbol
-                        num -= el.value
-                    }
+        if (num < 1 || num >= 4000) return console.error(invalidNumberMessage)
+        else {
+            let romanResultNumber = ''
+            for (let el of this.allRomans) {
+                while (num >= el.value) {
+                    romanResultNumber += el.symbol
+                    num -= el.value
                 }
-
-                return romanResultNumber
             }
+            return romanResultNumber
         }
     }
+    static fromRoman(str) {
 
-    fromRoman(string,) {
+        const romanNumeralPattern = /^(M{0,3})(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/
+        const invalidRomanNumeralPattern = 'Invalid numeral!, Numeral can not contain more than 3 symbols in a row or any not roman numerals symbols'
 
-        const allRoman = [
-            { symbol: 'M', value: 1000 },
-            { symbol: 'CM', value: 900 },
-            { symbol: 'D', value: 500 },
-            { symbol: 'CD', value: 400 },
-            { symbol: 'C', value: 100 },
-            { symbol: 'XC', value: 90 },
-            { symbol: 'L', value: 50 },
-            { symbol: 'XL', value: 40 },
-            { symbol: 'X', value: 10 },
-            { symbol: 'IX', value: 9 },
-            { symbol: 'V', value: 5 },
-            { symbol: 'IV', value: 4 },
-            { symbol: 'I', value: 1 }
-        ]
+        if (typeof str !== 'string') return this._notValidDataType(str, 'string', 'toRoman()')
 
-        if (typeof string !== 'string') {
-            console.error('Inappropriate data type (number), expected (string). Use toRoman() method')
-        } else {
-                let resultnumber = 0
+        if (romanNumeralPattern.test(str) === false) return console.error(invalidRomanNumeralPattern)
+        else {
+            function elementFind(el, allRomans) {
+                return allRomans.find((obj) => {
+                    return obj.symbol === str[el]
+                })
+            }
 
-                for (let e = 0; e < string.length; e++) {
-                    debugger
-                    const currentElement = allRoman.find((obj) => {
-                        return obj.symbol === string[e]
-                    })
-                    const nextElement = allRoman.find((obj) => {
-                        return obj.symbol === string[e + 1]
-                    })
-                    if (currentElement.symbol === string[string.length - 1]) {
-                        return resultnumber += currentElement.value
-                    }
+            let resultnumber = 0
+            for (let e = 0; e < str.length; e++) {
 
-                    if (currentElement.value >= nextElement.value) {
-                        resultnumber += currentElement.value
-                    }
+                const currentElement = elementFind(e, this.allRomans)
+                const nextElement = elementFind(e + 1, this.allRomans)
 
-                    if (currentElement.value < nextElement.value) {
-                        resultnumber += (nextElement.value - currentElement.value)
-                        e++
-                    }
+                if (nextElement === undefined) {
+                    return resultnumber += currentElement.value
                 }
 
-                return resultnumber
+                if (currentElement.value >= nextElement.value) {
+                    resultnumber += currentElement.value
+                }
+                else {
+                    resultnumber += (nextElement.value - currentElement.value)
+                    e++
+                }
             }
+
+            return resultnumber
         }
+    }
 }
 
-const number1 = new RomanNumerals()
-let romanNumber = number1.toRoman(132)
-console.log(romanNumber)
-console.log(number1.fromRoman(romanNumber))
+console.log(RomanNumerals.toRoman(265))
+console.log(RomanNumerals.fromRoman('CCLXV'))
 
 
 
