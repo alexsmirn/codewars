@@ -5,5 +5,4 @@ function sameCase(a, b) {
 
     return !isLetter(a) || !isLetter(b) ? -1 : caseDetector(a) === caseDetector(b) ? 1 : 0
 }
-
 console.log(sameCase('B', 'C'))
